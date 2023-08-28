@@ -2,6 +2,6 @@
 # Update package list and install nginx
 sudo apt-get -y update
 sudo apt-get -y upgrade
-sudo apt-get - install nginx
+sudo apt-get -y install nginx
 sudo service nginx start
 echo 'Hello World!' | sudo tee /var/www/html/index.html
