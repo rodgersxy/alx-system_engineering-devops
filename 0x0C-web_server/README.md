@@ -23,3 +23,17 @@ RFC 7540 (HTTP/2)
 scp
 curl
 ```
+
+## server:
+```
+# Install and setup nginx into the server
+sudo apt-get -y update
+sudo apt-get -y upgrade
+sudo apt-get -y install nginx
+/var/www/html$ ls
+echo "Hello World!" | sudo tee /var/www/html/index.html
+ls
+sudo nginx -t
+sudo service nginx restart
+sudo service nginx reload
+```
