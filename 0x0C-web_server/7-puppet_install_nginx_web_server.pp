@@ -4,7 +4,6 @@
 
 package { 'nginx':
   ensure   => 'installed',
-  provider => 'apt',
 }
 file { 'first content':
   ensure  => present,
