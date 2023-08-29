@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# To Configure your Nginx server so that /redirect_me
+# is redirecting to another page.
+# Moved permanently (redirection 301)
+
+sudo apt-get -y update
+sudo apt-get -y upgrade
+sudo apt-get -y install nginx
+sudo service nginx start
+new_string="server_name _;\\n\\trewrite ^/redirect_me https://github.com/rodgersxy permanent;"
+sudo sed -i "s#server_name _;#$new_string#" /etc/nginx/sites-available/default
+sudo nginx -t
+sudo service nginx restart
+sudo service nginx relaod
