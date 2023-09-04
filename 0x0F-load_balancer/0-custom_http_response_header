@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# To Configure your Nginx server
+
+# update packages and the install 
+sudo apt-get -y update
+sudo apt-get -y install nginx
+
+# html page 
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
+
+# perform redirection
+new_string="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/rodgersxy permanent;"
+sudo sed -i "s/server_name _;/$new_string/" /etc/nginx/sites-enabled/default
+
+# 404 page
+new_string="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var/www/html;\n\tinternal;\n\t}"
+sudo sed -i "s#listen 80 default_server;#$new_string#" /etc/nginx/sites-available/default
+
+# HTTP header response
+sudo sed -i '/server_name _/a add_header X-Served-By $HOSTNAME;' /etc/nginx/sites-enabled/default
+
+# test
+sudo nginx -t
+
+# restart nginx
+sudo service nginx restart
