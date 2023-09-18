@@ -1,0 +1,28 @@
+# Displays the current status of the UFW (Uncomplicated Firewall) configuration.
+sudo ufw status
+
+# By default, all incoming traffic will be blocked unless specific rules allow it.
+sudo ufw default deny incoming
+
+# By default all outgoing traffic will be allowed
+sudo ufw default allow outgoing
+
+# This command allows incoming TCP traffic on port 22, which is the standard
+  SSH port. It enables SSH access to the system.
+sudo ufw allow 22/tcp
+
+# command allows incoming TCP traffic on port 80, which is the standard HTTP port.
+It permits incoming web traffic.
+sudo ufw allow 80/tcp
+
+#  command allows incoming TCP traffic on port 443, which is the standard HTTPS port
+It permits secure web traffic.
+sudo ufw allow 443/tcp
+
+# This command enables the UFW firewall, activating the rules you've configured
+sudo ufw enable
+
+# Verify that the rules have been added by running
+sudo ufw show added
+
+sudo ufw status
