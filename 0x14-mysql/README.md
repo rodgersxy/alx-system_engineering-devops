@@ -1,4 +1,4 @@
-![Uploading 09e83e914f0d6865ce320a47f2f14837a5b190b6.gif…]()
+
 # 0x14. MySQL
 
 ## General
