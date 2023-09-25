@@ -17,6 +17,7 @@ def main():
             "https://jsonplaceholder.typicode.com/users")
     employees = employees_response.json()
 
+    """Create a dictionary to store tasks for all employees"""
     all_tasks = {}
 
     for employee in employees:
@@ -32,6 +33,7 @@ def main():
                  "task": task["title"], "completed": task["completed"]
                  })
         all_tasks[employee["id"]] = employee_tasks
+    """Save the data as JSON in a file"""
     with open("todo_all_employees.json", 'w',
               newline='', encoding='utf-8') as f:
         json.dump(all_tasks, f)
