@@ -40,4 +40,4 @@ def recurse(subreddit, hot_list=[], after=None):
         return recurse(subreddit, hot_list, after)
     else:
         # If the request was not successful, return "None" to indicate an issue
-        return None
+        return (None)
