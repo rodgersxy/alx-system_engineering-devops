@@ -5,7 +5,7 @@ function that queries the Reddit API and prints the titles of the first
 """
 
 import requests
-
+# Define custom User-Agent headers to identify the client
 headers = {"User-Agent": "ubuntu:0x16-api_advanced (by /u/rodgers_)"}
 
 
