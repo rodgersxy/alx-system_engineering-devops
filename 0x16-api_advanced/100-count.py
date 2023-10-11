@@ -1,73 +1,84 @@
 #!/usr/bin/python3
-
 """
-a recursive function that queries the Reddit API, parses the title
-of all hot articles, and prints a sorted count of given keywords
-(case-insensitive, delimited by spaces. Javascript should coun
-t as javascript, but java should not).
+a recursive function that queries the Reddit API, parses the title of all
+hot articles, and prints a sorted count of given keywords (case-insensitive,
+delimited by spaces. Javascript should count as javascript,
+but java should not).
 """
-
+import re
 import requests
 
 
-# Define a function called count_words that takes several parameters
-def count_words(subreddit, word_list, dictWord={}, after=None):
+def add_title(dictionary, hot_posts):
     """
-    Recursive function that queries the Reddit API
+    Adds item into a list basd=ed on the keywords
     """
-    # Check if the 'subreddit' parameter is None
-    if subreddit is None:
-        print(None)
-
-    # Define the URL to query the Reddit API based on the subreddit
-    URL = 'http://www.reddit.com/r/{}/hot.json'.format(subreddit)
-
-    # Define headers for the HTTP request
-    headers = {"User-Agent": "ubuntu:0x16-api_advanced (by /u/rodgers_)"}
-
-    # Send an HTTP GET request to the Reddit API
-    response = requests.get(
-        URL,
-        headers=headers,
-        params={'after': after, 'limit': 10}
-    )
-
-    # If the response status code is 404 (Not Found), return
-    if response.status_code == 404:
+    # Check if there are any hot posts left to process
+    if len(hot_posts) == 0:
         return
+    # Split the title into words and iterate through them
+    title = hot_posts[0]['data']['title'].split()
+    for word in title:
+        for key in dictionary.keys():
+            c = re.compile("^{}$".format(key), re.I)
+            if c.findall(word):
+                dictionary[key] += 1
+    hot_posts.pop(0)
+    add_title(dictionary, hot_posts)
 
-    # Parse the JSON response
-    data = response.json()
 
-    # Extract information about the hot articles
-    allHot = data.get("data", {}).get("children", None)
-    after = data.get("data", {}).get("after", None)
+def recurse(subreddit, dictionary, after=None):
+    """
+    Queries the Reddit API
+    Define a function to recursively query the Reddit API for hot post
+    """
+    # Set the user agent
+    u_agent = 'Mozilla/5.0'
+    headers = {
+        'User-Agent': u_agent
+    }
 
-    # Iterate through each hot article and count the occurrences of words
-    for hotPost in allHot:
-        title = hotPost.get("data", {}).get("title", "").lower().split()
-        for word in word_list:
-            if word.lower() in title:
-                totalIteration = 0
-                for w in title:
-                    if word.lower() == w:
-                        totalIteration += 1
-                if word.lower() not in dictWord.keys():
-                    dictWord[word.lower()] = totalIteration
-                else:
-                    dictWord[word.lower()] += totalIteration
+    # Define query parameters, including 'after' for pagination
+    params = {
+        'after': after
+    }
 
-    # Check if there are more pages of articles (pagination)
-    if after is None:
-        if len(dictWord) == 0:
-            pass
-        else:
-            # Sort and print the word counts in descending
-            # order by count, then by word
-            dictWord = sorted(dictWord.items(), key=lambda kv: (-kv[1], kv[0]))
-            for key, value in dictWord:
-                print('{}: {}'.format(key, value))
+    # Define the Reddit API URL for the specified subreddit
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    res = requests.get(url,
+                       headers=headers,
+                       params=params,
+                       allow_redirects=False)
+
+    if res.status_code != 200:
+        return None
+
+    dic = res.json()
+    hot_posts = dic['data']['children']
+    add_title(dictionary, hot_posts)
+    after = dic['data']['after']
+    if not after:
         return
+    recurse(subreddit, dictionary, after=after)
 
-    # Recursively call the function to fetch the next page of articles
-    return count_words(subreddit, word_list, dictWord, after)
+
+def count_words(subreddit, word_list, dictionary=None):
+    """
+    Init function
+    Check if a dictionary is provided, and if not, create an empty one
+    """
+    if dictionary is None:
+        dictionary = {}
+
+    for word in word_list:
+        word = word.lower()
+        if word not in dictionary:
+            dictionary[word] = 0
+
+    recurse(subreddit, dictionary)
+
+    # Sort the word counts in descending order and print them
+    sorted_items = sorted(dictionary.items(), key=lambda kv: (-kv[1], kv[0]))
+    for item in sorted_items:
+        if item[1] > 0:
+            print("{}: {}".format(item[0], item[1]))
