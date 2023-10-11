@@ -4,7 +4,7 @@
 
 *Timeline:*
 
-* Issue Detected: Friday, November 12, 2023, 9:30 AM (EST)  :worried:
+* Issue Detected: Friday, November 12, 2023, 9:30 AM (EST)  :worried:  
 **Detection Method:** A surge in customer complaints about missing property images and data inconsistencies was observed, indicating a widespread issue.
 * Actions Taken:  
 Initial investigation focused on the image rendering and data retrieval modules.  
