@@ -40,3 +40,6 @@ Create a monitoring system for data consistency and image retrieval.
 Document and standardize the manual synchronization procedure for future reference.
 ```
 :thumbsup: :bowtie:
+
+![pQ9YzVY](https://github.com/rodgersxy/alx-system_engineering-devops/assets/47353893/ea85e1e7-ddec-4982-af80-2dc4b8773cd8)
+
